@@ -23,12 +23,5 @@ class Webhook:
                 return await res.json()
 
 
-
-async def main():
-    webhook = Webhook('NzY4MDMyNDI1NTY1MDkzODk4.X46j7w.ZCoqMj-FmOzl3sybmMDvM1EwMSs')
-    await webhook.post_webhook(await webhook.create_webhook(892450184234139688, 'Jessie'), 'hello')
-
-asyncio.run(main())
-
             
 
