@@ -1,77 +1,70 @@
-import aiohttp
-import asyncio
+import requests, asyncio
 from json import dumps
 
 
 class Webhook:
-    """Webhook Class
-
-    """
+    """Webhook Class"""
 
     def __init__(self, token: str) -> None:
-        self._baseurl = "https://discord.com/api/v9/"
-        self._token = token
-        self._header = {'Authorization': f'Bot {self._token}'}
+        self._baseurl = 'https://discord.com/api/v9'
+        self._auth_header = {'Authorization': f'Bot {token}'}
 
-    
-    async def get_channel_webhooks(self, channel_id):
-        """Returns a list of channel webhook objects. Requires the MANAGE_WEBHOOKS permission.
+    async def create_webhook(self):
+        """Creates a new webhook.
+        Create a new webhook. Requires the MANAGE_WEBHOOKS permission. Returns a webhook object on success.
         """
-        url = self._baseurl+f'channels/{channel_id}/webhooks'
-        async with aiohttp.ClientSession() as session:
-            async with session.get(url, headers=self._header) as res:
-                return await res.json()
+        pass
+
+    async def get_channel_webhooks(self):
+        """Create a new webhook. Requires the MANAGE_WEBHOOKS permission. Returns a webhook object on success."""
+        pass
+
+    async def get_guild_webhooks(self):
+        """Returns a list of guild webhook objects. Requires the MANAGE_WEBHOOKS permission."""
+        pass
+
+    async def get_webhook(self):
+        """Returns the new webhook object for the given id."""
+        pass
+
+    async def get_webhook_with_token(self):
+        """Like get webhook except this call does not
+         require authentication and returns no user in the webhook object."""
+        pass
+
+    async def modify_webhook(self):
+        """Modify a webhook. Requires the MANAGE_WEBHOOKS permission. Returns the updated webhook object on success."""
+        pass
+
+    async def modify_webhook_with_token(self):
+        """Same as above, except this call does not require authentication,
+         does not accept a channel_id parameter in the body, and does not return a user in the webhook object."""
+        pass
+
+    async def delete_webhook(self):
+        """Delete a webhook permanently. Requires the MANAGE_WEBHOOKS permission.
+         Returns a 204 NO CONTENT response on success."""
+        pass
+
+    async def delete_webhook_with_token(self):
+        """Same as delete webhook, except this call does not require authentication."""
+        pass
+
+    async def execute_webhook(self):
+        """Executes the webhook"""
+        pass
+
+    async def get_webhook_message(self):
+        """Returns a previously-sent webhook message from the same token. Returns a message object on success."""
+        pass
+
+    async def edit_webhook_message(self):
+        """Edits a previously-sent webhook message from the same token. Returns a message object on success."""
+        pass
+
+    async def delete_webhook_message(self):
+        """Deletes a message that was created by the webhook. Returns a 204 NO CONTENT response on success."""
+        pass
 
 
-    async def get_guild_webhooks(self, guild_id):
-        """Returns a list of guild webhook objects. Requires the MANAGE_WEBHOOKS permission.
-        """
-        url = self._baseurl+f'guilds/{guild_id}/webhooks'
-        async with aiohttp.ClientSession() as session:
-            async with session.get(url, headers=self._header) as res:
-                return await res.json()
 
-    async def create_webhook(self, channel_id: int):
-        """Creates Webhook.
-        Sends a POST request to the discord API and returns a webhook object as json.
-
-        Args:
-            channel_id: Snowflake ID of a Discord Channel.
-            name: User name of the webhook message.
-        Returns:
-            Returns aiohttp response
-
-        """
-
-        url = self._baseurl+f'channels/{channel_id}/webhooks'
-        async with aiohttp.ClientSession() as session:
-            async with session.post(url, headers=self._header, json={'name': 'Webhook'}) as res:
-                return await res.json()
-
-
-    async def modify_webhook(self, webhook_id: int, name: str, channel_id: int):
-        url = self._baseurl+f'webhooks/{webhook_id}'
-        print(url)
-        async with aiohttp.ClientSession() as session:
-            async with session.patch(url, headers=self._header, json={'name': name, 'channel_id': channel_id}) as res:
-                return await res.json()
-
-
-
-    async def post_webhook(self, webhook: dict, params: dict):
-        """Sends the webhook.
-        Posts/sends the webhook in a Discord channel.
-
-
-
-        Args:
-            webhook: Dict with webhook object.
-            params: For detailed explaination check, https://discord.com/developers/docs/resources/webhook#execute-webhook-jsonform-params
-        Returns:
-            Returns aiohttp response
-        """
-
-        url = self._baseurl+f'/webhooks/{webhook["id"]}/{webhook["token"]}'
-        async with aiohttp.ClientSession() as session:
-            async with session.post(url, headers=self._header, json=params) as res:
-                return res
