@@ -1,6 +1,9 @@
+
+import json
 import requests, asyncio
 from json import dumps
 
+from requests.api import request
 
 class Webhook:
     """Webhook Class"""
@@ -9,32 +12,44 @@ class Webhook:
         self._baseurl = 'https://discord.com/api/v9'
         self._auth_header = {'Authorization': f'Bot {token}'}
 
-    async def create_webhook(self, channel_id):
+    async def create_webhook(self, channel_id: int, name: str):
         """Creates a new webhook.
         Create a new webhook. Requires the MANAGE_WEBHOOKS permission. Returns a webhook object on success.
         """
         url = self._baseurl+f'/channels/{channel_id}/webhooks'
+        return requests.post(url, headers=self._auth_header, json={'name': name})
 
     async def get_channel_webhooks(self, channel_id):
         """Create a new webhook. Requires the MANAGE_WEBHOOKS permission. Returns a webhook object on success."""
         url = self._baseurl+f'/channels/{channel_id}/webhooks'
+        return requests.get(url, headers=self._auth_header)
 
     async def get_guild_webhooks(self, guild_id):
         """Returns a list of guild webhook objects. Requires the MANAGE_WEBHOOKS permission."""
         url = self._baseurl+f'/guilds/{guild_id}/webhooks'
+        return requests.get(url, headers=self._auth_header)
 
     async def get_webhook(self, webhook_id):
         """Returns the new webhook object for the given id."""
         url = self._baseurl+f'/webhooks/{webhook_id}'
+        return requests.get(url, headers=self._auth_header)
 
     async def get_webhook_with_token(self, webhook_id, webhook_token):
         """Like get webhook except this call does not
          require authentication and returns no user in the webhook object."""
         url = self._baseurl+f'/webhooks/{webhook_id}/{webhook_token}'
+        return requests.get(url, headers=self._auth_header)
 
-    async def modify_webhook(self, webhook_id):
+
+    async def modify_webhook(self, webhook_id, name, channel_id, avatar=None):
         """Modify a webhook. Requires the MANAGE_WEBHOOKS permission. Returns the updated webhook object on success."""
         url = self._baseurl+f'/webhooks/{webhook_id}'
+        return requests.patch(url, headers=self._auth_header, json={
+            'name': name,
+            'avatar': avatar,
+            'channel_id': channel_id
+        })
+
 
     async def modify_webhook_with_token(self, webhook_id, webhook_token):
         """Same as above, except this call does not require authentication,
