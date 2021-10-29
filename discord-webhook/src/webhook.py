@@ -51,27 +51,37 @@ class Webhook:
         })
 
 
-    async def modify_webhook_with_token(self, webhook_id, webhook_token):
+    async def modify_webhook_with_token(self, webhook_id, webhook_token, name, channel_id, avatar=None):
         """Same as above, except this call does not require authentication,
          does not accept a channel_id parameter in the body, and does not return a user in the webhook object."""
         url = self._baseurl+f'/webhooks/{webhook_id}/{webhook_token}'
+        return requests.patch(url, headers=self._auth_header, json={
+            'name': name,
+            'avatar': avatar,
+            'channel_id': channel_id
+        })
 
     async def delete_webhook(self, webhook_id):
         """Delete a webhook permanently. Requires the MANAGE_WEBHOOKS permission.
          Returns a 204 NO CONTENT response on success."""
         url = self._baseurl+f'/webhooks/{webhook_id}'
+        return requests.delete(url)
 
     async def delete_webhook_with_token(self, webhook_id, webhook_token):
         """Same as delete webhook, except this call does not require authentication."""
         url = self._baseurl+f'/webhooks/{webhook_id}/{webhook_token}'
+        return requests.delete(url)
 
-    async def execute_webhook(self, webhook_id, webhook_token):
+
+    async def execute_webhook(self, webhook_id, webhook_token, params):
         """Executes the webhook"""
         url = self._baseurl+f'/webhooks/{webhook_id}/{webhook_token}'
+        return requests.post(url, headers=self._auth_header, json=params)
 
     async def get_webhook_message(self, webhook_id, webhook_token, message_id):
         """Returns a previously-sent webhook message from the same token. Returns a message object on success."""
         url = self._baseurl+f'/webhooks/{webhook_id}/{webhook_token}/messages/{message_id}'
+        return requests.get(url, headers=self._auth_header)
 
     async def edit_webhook_message(self, webhook_id, webhook_token, message_id):
         """Edits a previously-sent webhook message from the same token. Returns a message object on success."""
